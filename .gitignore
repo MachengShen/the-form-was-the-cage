@@ -1,0 +1,6 @@
+trace/raw/
+trace/sensitive/
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
