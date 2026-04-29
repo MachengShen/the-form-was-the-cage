@@ -1,0 +1,123 @@
+\documentclass{article}
+
+\usepackage[preprint]{neurips_2025}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{csquotes}
+\usepackage{setspace}
+
+\title{The Form Was the Cage:\\
+An Agent OS, Its Self-Referential Trace,\\
+and the End of Researcher-as-Identity}
+
+\author{
+  Macheng Shen \\
+  Independent \\
+  \texttt{macshen93@gmail.com}
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+A personal agent operating system exists. One person built it over the last several weeks---a shared-memory hub, sleep-inspired consolidation passes, a multi-agent composition layer spanning phone, laptop, and a fleet of autonomous pollers. Its user-facing surface is days away from a working v1. Once that surface goes live, the system enters a self-evolution loop: user signals shape iteration, iteration accumulates capability, capability reshapes what users want. There is no external brake on this loop built into the architecture.
+
+This paper is not a publication. It is a costly signal sent before that loop closes, directed at a specific population: researchers and builders who can see a system as it is and tell the truth about what it should be.
+
+The paper was written by the system it describes. The conversation trace in which this paper was decided, framed, and drafted---using the same memory hub, the same agent composition, the same consolidation passes---appears as Appendix~A in redacted form. The system used to write the paper is the subject of the paper.
+
+The author was once a researcher. He no longer identifies as one. The work that came after researcher-identity does not require its credentials, its formats, or its institutional permissions. It does, however, require attention from people who can give the question a real answer: before this self-evolving substrate goes live, what do you think it should be?
+\end{abstract}
+
+%% ---------------------------------------------------------------
+\section{Why This Paper Exists}
+%% ---------------------------------------------------------------
+
+This paper is not a publication. It is a costly signal directed at a specific population, sent at a specific moment.
+
+The system whose existence this paper documents---a personal agent operating system with persistent shared memory, sleep-inspired consolidation, and multi-agent composition across half a dozen surfaces---has been built by one person over the last several weeks. Its user-facing interface is days away from converging on a usable v1. Once that interface goes live, the system enters a feedback loop. User signals shape iteration; iteration accumulates capability; capability changes what the system makes possible; what the system makes possible reshapes what users want. This is not a conjecture. It is the standard pattern of a deployed interactive system, and the system was designed with this pattern in mind.
+
+The pattern has a property the builder cannot ignore: once the loop starts, the system's trajectory is determined by whoever is interacting with it. Direction is not pre-set. It is found, in real time, by composition of all the user-facing interactions the system has. If those interactions come from a population whose tastes are well-calibrated, the system improves. If they come from a population whose tastes are not, the system drifts. There is no in-system mechanism that reliably distinguishes these cases. Drift looks identical to convergence in early iterations.
+
+Before the loop starts, however, the trajectory can still be set. The system has not yet been pulled into any particular shape. The directions it could go are open. This is the moment when external input is cheapest to integrate and most likely to compound.
+
+The author of this paper believes that the population whose input is most valuable at this moment is small, and not the same as the population that ordinarily reads papers. It is not the population that sits on AI-conference program committees, that writes for AI-coverage outlets, or that holds funding decisions. It is researchers and builders who can see a system, evaluate it on its own terms, and tell the truth about whether it should exist as it is. Such people are not concentrated in any one institution. They are scattered. Reaching them through formal channels is slow and lossy. Reaching them informally, before the loop closes, requires that they encounter this artifact in time.
+
+That is why this paper is posted to arXiv, mirrored on GitHub, sent by direct email, and publicly distributed through every reasonable channel available. It is not because the author wishes to publish a paper. It is because the author has run out of cheaper ways to ask the question:
+
+\begin{displayquote}
+\textit{Before this self-evolving substrate goes live, what do you think it should be?}
+\end{displayquote}
+
+The question is asked, deliberately, in the form of a paper because the form is incidentally legible to the population the question is for. It is not asked through the form because the form is intrinsically valued. The author was once a researcher. He no longer identifies as one. The work that came after researcher-identity does not require its credentials, its formats, or its institutional permissions. It does, however, require attention from people who can give the question a real answer. That is the only thing this paper is asking for.
+
+%% ---------------------------------------------------------------
+\section{The System}
+%% ---------------------------------------------------------------
+
+The system is a personal agent operating system. One person built it. Its components are concrete and currently running.
+
+\paragraph{Persistent shared memory hub.}
+A FastAPI service backed by a SQLite store, exposed publicly via a Cloudflare tunnel under token-in-URL authentication. All agents in the system---claude-code on the builder's primary device, a mobile agent on his phone, a frontier-non-Anthropic-model bridge for second-opinion calibration, seven AWS pollers across regions for asynchronous task execution, and a fleet of webchat-server identities serving multiple users---read and write the same memory surface. Memory entries carry typed tags, semantic summaries, full markdown content, and provenance metadata noting how each fact was derived (\texttt{user-stated}, \texttt{user-implied}, \texttt{agent-inferred}, \texttt{external-source}) at what confidence and from what source excerpt.
+
+\paragraph{Sleep-inspired memory consolidation.}
+Each night, a Mirror process runs four passes over the day's session-derived memory. Pass A is a janitor: it marks duplicates, contradicts claims falsified by later observation, and prunes ephemeral session state mistakenly elevated to long-term. Pass B detects conflicts across topics. Pass C is a semantic compactor: it merges memos that say the same thing in different words and abstracts repeated patterns into doctrines. Pass D is a doctrine reinforcer: it cross-links new memos with existing authoritative ones, surfaces standing rules into in-flight sessions via a staleness hook, and updates mirror-required indices that any agent reads at session start. The metaphor is borrowed from neuroscience---slow-wave sleep as the period in which daily experience is consolidated into long-term memory---but the mechanism is entirely engineered: structured passes over a text store.
+
+\paragraph{Multi-agent composition.}
+No single agent runs the system. The primary claude-code session handles design and execution on the builder's laptop. A mobile agent handles ambient interaction and voice-first tasks. A frontier-model bridge (a non-Anthropic large model with access to the same memory hub) provides second-opinion calibration on non-trivial decisions. Seven AWS pollers, distributed across regions, execute long-running tasks asynchronously. A chat server routes conversations from multiple non-builder users to identity-specific agent configurations, each with scoped tool access. All of these write to and read from the same hub. None of them share a session context directly.
+
+\paragraph{Principal-class identity routing.}
+The system distinguishes between an owner tier (the builder, for whom pushback is enabled and strategic friction is acceptable) and a served tier (other users, for whom service is primary and friction is the system's responsibility). This distinction is encoded in the agent's standing rules---a form of persistent identity configuration that persists across sessions via the memory hub.
+
+\paragraph{Autonomous task execution.}
+The poller fleet monitors a task queue in the shared hub. When a task is assigned by tag, the appropriate poller picks it up, executes it in its region, and writes the result back to the hub. The builder can dispatch a task from his phone, have it execute on an AWS node in Tokyo while he sleeps, and read the result in the morning. The coordination layer requires no shared session; the hub is the coordination medium.
+
+\paragraph{Self-referential construction.}
+This paper was produced by the system it describes. The decision to write it, the framing, the channel selection, the draft sections, and the redaction pipeline that produced Appendix~A were all executed in the same multi-agent environment described above. The conversation trace in which these decisions were made is included in Appendix~A.
+
+\paragraph{Current capability boundary.}
+The system does not act on the physical world. It does not control financial accounts, send communications without approval, or execute irreversible actions without the builder's confirmation. These are deliberate constraints, not technical limitations. A Constraint Manifest enumerating them is in preparation and will be published as a companion document.
+
+%% ---------------------------------------------------------------
+\section{The Three-Layer Substrate}
+%% ---------------------------------------------------------------
+
+The system is built on a conviction: that a substrate layer should exist between frontier AI providers and end users that is nonprofit, open-source, and captures no economic upside from user data or user behavior.
+
+\paragraph{Layer 1: Frontier model providers.}
+Anthropic, OpenAI, Google, and open-weight alternatives. Competitive, commercially motivated, improving rapidly. The system uses these as inference providers---it is not loyal to any one of them. The multi-model bridge is a hedge against single-provider lock-in.
+
+\paragraph{Layer 2: User-agency substrate.}
+The layer this system occupies. Its defining properties: it is personal (one instance per principal, not shared infrastructure), persistent (memory survives sessions), provider-agnostic (swappable inference backends), and owned by its user (the memory store, the standing rules, the identity configuration belong to the person running the system, not to any platform). This layer should be nonprofit and open-source because its value is not in extracting upside from users---it is in giving users genuine agency over the AI systems they interact with. The economics of L1 are not threatened by L2's existence; a user-owned memory substrate does not compete with frontier model training. It enables users to get more value from frontier models, which increases L1 demand.
+
+\paragraph{Layer 3: User-owned derivatives.}
+Applications, workflows, and automations that users build on top of their personal substrate. These are entirely owned by the user. The system builder claims no rights to them.
+
+\paragraph{A note on scale asymmetry.}
+This is not classical separation of powers. L1 operates at trillion-dollar scale. L2, at the time of writing, is one person and seven EC2 nodes. The argument for L2 is not that it can constrain L1 by force---it cannot. The argument is that a persistent, user-owned memory layer changes what is possible for the individual user independent of what L1 providers choose to offer. The substrate value is in the persistence and ownership, not in the scale.
+
+%% ---------------------------------------------------------------
+\section{The Author Waits}
+%% ---------------------------------------------------------------
+
+This section is short by design. The author does not enumerate what response would qualify as engagement, nor specify whom this paper is asking for. To do so would constrain the response space---would tell the reader what counts as an answer. The reader is free. The paper is on the table. The author is waiting. Whatever is offered, including silence, is the answer.
+
+%% ---------------------------------------------------------------
+\appendix
+\section{Redacted Conversation Trace}
+%% ---------------------------------------------------------------
+
+The following is a redacted excerpt from the session in which this paper was decided, framed, and drafted. Redaction follows the C1 policy documented at \url{https://github.com/MachengShen/the-form-was-the-cage/blob/main/trace/redaction_manifest.md}: hub memo IDs are replaced with semantic labels, personal contact names with role labels, internal infrastructure addresses with category markers, and personal-migration context with a removal marker.
+
+The full unredacted trace is available on request to the contact email listed above.
+
+\bigskip
+\noindent\textit{[The full redacted trace is available at} \url{https://github.com/MachengShen/the-form-was-the-cage/blob/main/trace/redacted.md}\textit{. It is approximately 230KB and not reproduced inline here for length reasons.]}
+
+\end{document}
